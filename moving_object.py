@@ -2,14 +2,15 @@ import arcade
 
 
 class Moving_Object(arcade.Sprite):
-     def __init__(self, filename, sprite_scaling, game_bounds):
+    def __init__(self, filename, sprite_scaling, game_bounds, health):
         super().__init__(filename, sprite_scaling)
 
         self.game_bounds = game_bounds
         self.change_x = 0
         self.change_y = 0
+        self.health = health
   
-     def update(self):
+    def update(self):
 
         # Move the coin
         self.center_x += self.change_x
@@ -27,13 +28,14 @@ class Moving_Object(arcade.Sprite):
 
         if self.top > self.game_field.top_border:
             self.change_y *= -1
+    
+    def collision(self):
+        pass
 
 
-class Agent(Moving_Object):
-
-    def __init__(self, filename, sprite_scaling, game_bounds):
-
-        super().__init__(filename, sprite_scaling, game_bounds)
+class Spaceship(Moving_Object):
+    def __init__(self, filename, sprite_scaling, health, game_bounds):
+        super().__init__(filename, sprite_scaling, health, game_bounds)
 
         self.center_x = 50
         self.center_y = 50
@@ -41,15 +43,18 @@ class Agent(Moving_Object):
     def update(self):
         super().update(self)
 
+        #calculate if agnet got hit by a bullet
+        #if yes game over
+        #if no go ahead
 
-class Bullet(Moving_Object):
 
-    def __init__(self, filename, sprite_scaling, game_bounds, window_bounds):
-
-        super().__init__(filename, sprite_scaling, game_bounds)
+class Meteor(Moving_Object):
+    def __init__(self, filename, sprite_scaling, health, game_bounds, window_bounds):
+        super().__init__(filename, sprite_scaling, health, game_bounds)
 
         self.center_x = window_bounds
         self.center_y = 50
+        self.crossed_border = False
 
     def update(self):
         super().update(self)
