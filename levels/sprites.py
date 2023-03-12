@@ -1,12 +1,13 @@
 import arcade
-import const
+from levels import level_const
+import window
 
 HEALTH = 3
-SPACESHIP_SPRITE_FILE = ":resources:images/animated_characters/female_person/femalePerson_idle.png"
-METEOR_SPRITE_FILE =  ":resources:images/animated_characters/female_person/femalePerson_idle.png"
+SQUARE_SPRITE_FILE = ":resources:images/animated_characters/female_person/femalePerson_idle.png"
+CIRCLE_SPRITE_FILE =  ":resources:images/animated_characters/female_person/femalePerson_idle.png"
 SPRITE_SCALING = 0.5
 
-class Moving_Object(arcade.Sprite):
+class Shape(arcade.Sprite):
     def __init__(self, filename):
         super().__init__(filename, SPRITE_SCALING)
 
@@ -21,21 +22,21 @@ class Moving_Object(arcade.Sprite):
         self.center_y += self.change_y
 
         # Bounce off the edges
-        if self.left < const.DZ_LEFT or self.right > const.DZ_RIGHT :
+        if self.left < level_const.DZ_LEFT or self.right > level_const.DZ_RIGHT :
             self.change_x *= -1
 
-        if self.bottom < const.DZ_BOTTOM or self.top > const.DZ_TOP:
+        if self.bottom < level_const.DZ_BOTTOM or self.top > level_const.DZ_TOP:
             self.change_y *= -1
             
         
 
 
-class Spaceship(Moving_Object):
+class Square(Shape):
     def __init__(self):
-        super().__init__(SPACESHIP_SPRITE_FILE)
+        super().__init__(SQUARE_SPRITE_FILE)
 
-        self.center_x = const.WIN_CENTER_X
-        self.center_y = const.WIN_CENTER_Y
+        self.center_x = window.CENTER_X
+        self.center_y = window.CENTER_Y
         self.velocity = [3, 3]
 
     def update(self):
@@ -46,12 +47,12 @@ class Spaceship(Moving_Object):
         #if no go ahead
 
 
-class Meteor(Moving_Object):
+class Circle(Shape):
     def __init__(self):
-        super().__init__(METEOR_SPRITE_FILE)
+        super().__init__(CIRCLE_SPRITE_FILE)
 
-        self.center_x = const.WIN_CENTER_X
-        self.center_y = const.WIN_CENTER_Y
+        self.center_x = window.CENTER_X
+        self.center_y = window.CENTER_Y
         self.crossed_border = False
 
     def update(self):
