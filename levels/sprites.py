@@ -10,6 +10,9 @@ SPRITE_SCALING = 0.2
 SPACESHIP_SCALING = 0.5
 METEOR_SCALING = 0.5
 
+MAX_SPEED = 5
+ACCLERATION = 0.4
+
 SPACESHIP_LIST = ["playerShip1_orange.png", "playerShip1_blue.png", "playerShip1_green.png", 
                   "playerShip2_orange.png", "playerShip3_orange.png"]
     
@@ -79,9 +82,22 @@ class Spaceship(arcade.Sprite):
         self.center_x = window.CENTER_X
         self.center_y = window.CENTER_Y
         self.crossed_border = False
+        self.angle = 0
 
-    def update(self):
-
+    def update(self, direction_x=0, direction_y=0):
+        
+        # Calculate velocity
+        # accleration can be 1, -1 or 0 and the speed has a max of 5
+        if(abs(self.change_x + direction_x * ACCLERATION) <= MAX_SPEED):
+            self.change_x += direction_x
+        
+        if(abs(self.change_y + direction_y * ACCLERATION) <= MAX_SPEED):
+            self.change_y += direction_y
+        
+        # Rotate sprite in moving direction
+        self.change_angle = math.atan2(self.change_y, self.change_x) * 180 / math.pi
+        self.angle = self.change_angle -90
+        
         # Move
         self.center_x += self.change_x
         self.center_y += self.change_y
@@ -94,15 +110,8 @@ class Spaceship(arcade.Sprite):
 
         if self.bottom < 0:
             self.bottom = 0
-        elif self.top > window.WIDTH - 1:
-            self.top = window.WIDTH - 1
-
-        #if self.left < 0 or self.right > window.WIDTH :
-        #    self.change_x *= -1
-
-        #if self.bottom < 0 or self.top > window.WIDTH:
-        #    self.change_y *= -1
-        
+        elif self.top > window.HEIGHT - 1:
+            self.top = window.HEIGHT - 1
 
         
         

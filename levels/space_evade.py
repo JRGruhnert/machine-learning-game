@@ -1,5 +1,5 @@
 import arcade
-from arcade import gui
+import arcade.gui
 from levels import sprites
 from pause_view import PauseView
 
@@ -15,6 +15,8 @@ class SpaceEvade(arcade.View):
         #init all elements
         self.spaceship = sprites.Spaceship()
         self.background = arcade.load_texture(":resources:images/backgrounds/stars.png")
+        self.direction_x = 0
+        self.direction_y = 0
                           
         #init gui elements
         self.manager = arcade.gui.UIManager()
@@ -78,30 +80,9 @@ class SpaceEvade(arcade.View):
 
     def on_update(self, delta_time):
         # Call update on all sprites
-        self.spaceship.update()
+        self.spaceship.update(self.direction_x, self.direction_y)
         self.meteor_sprites_list.update()
 
-    def on_mouse_motion(self, x, y, dx, dy):
-        """ Handle Mouse Motion """
-
-        # Move the center of the player sprite to match the mouse x, y
-        self.spaceship.center_x = x
-        self.spaceship.center_y = y 
-
-    def update_player_speed(self):
-
-        # Calculate speed based on the keys pressed
-        self.player_sprite.change_x = 0
-        self.player_sprite.change_y = 0
-
-        if self.up_pressed and not self.down_pressed:
-            self.player_sprite.change_y = MOVEMENT_SPEED
-        elif self.down_pressed and not self.up_pressed:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
-        if self.left_pressed and not self.right_pressed:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
-        elif self.right_pressed and not self.left_pressed:
-            self.player_sprite.change_x = MOVEMENT_SPEED
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -111,35 +92,25 @@ class SpaceEvade(arcade.View):
             pause = PauseView(self)
             self.window.show_view(pause)
 
+        if key == arcade.key.ESCAPE:
+            self.meteor_sprites_list.append(sprites.Meteor())
         if key == arcade.key.UP:
-            self.up_pressed = True
-            self.update_player_speed()
+            self.direction_y = 1
         elif key == arcade.key.DOWN:
-            self.down_pressed = True
-            self.update_player_speed()
+            self.direction_y = -1
         elif key == arcade.key.LEFT:
-            self.left_pressed = True
-            self.update_player_speed()
+            self.direction_x = -1
         elif key == arcade.key.RIGHT:
-            self.right_pressed = True
-            self.update_player_speed()
+            self.direction_x = 1
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
-        if key == arcade.key.UP:
-            self.up_pressed = False
-            self.update_player_speed()
-        elif key == arcade.key.DOWN:
-            self.down_pressed = False
-            self.update_player_speed()
-        elif key == arcade.key.LEFT:
-            self.left_pressed = False
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT:
-            self.right_pressed = False
-            self.update_player_speed()
-
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.direction_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.direction_x = 0
+      
 
     def on_click_start(self, event):
         print("Start:", event)
