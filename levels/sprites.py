@@ -1,11 +1,25 @@
+import math
+import random
 import arcade
-from levels import level_const
 import window
 
 HEALTH = 3
-SQUARE_SPRITE_FILE = ":resources:images/animated_characters/female_person/femalePerson_idle.png"
-CIRCLE_SPRITE_FILE =  ":resources:images/animated_characters/female_person/femalePerson_idle.png"
-SPRITE_SCALING = 0.5
+SQUARE_SPRITE_FILE = "res/square.png"
+CIRCLE_SPRITE_FILE =  "res/circle.png"
+SPRITE_SCALING = 0.2
+SPACESHIP_SCALING = 0.5
+METEOR_SCALING = 0.5
+
+SPACESHIP_LIST = ["playerShip1_orange.png", "playerShip1_blue.png", "playerShip1_green.png", 
+                  "playerShip2_orange.png", "playerShip3_orange.png"]
+    
+SPACESHIP_LIFE_LIST = ["playerLife1_orange.png", "playerLife1_blue.png", "playerLife1_green.png"]
+
+LASER_LIST = ["laserBlue01.png", "laserRed01.png"]
+
+METEOR_LIST = ["meteorGrey_tiny1.png", "meteorGrey_tiny2.png", "meteorGrey_small1.png", "meteorGrey_small2.png", "meteorGrey_med1.png",
+          "meteorGrey_med2.png","meteorGrey_big1.png", "meteorGrey_big2.png", "meteorGrey_big3.png", "meteorGrey_big4.png"]
+
 
 class Shape(arcade.Sprite):
     def __init__(self, filename):
@@ -22,15 +36,13 @@ class Shape(arcade.Sprite):
         self.center_y += self.change_y
 
         # Bounce off the edges
-        if self.left < level_const.DZ_LEFT or self.right > level_const.DZ_RIGHT :
+        if self.left < 0 or self.right > window.WIDTH :
             self.change_x *= -1
 
-        if self.bottom < level_const.DZ_BOTTOM or self.top > level_const.DZ_TOP:
+        if self.bottom < 0 or self.top > window.HEIGHT:
             self.change_y *= -1
             
         
-
-
 class Square(Shape):
     def __init__(self):
         super().__init__(SQUARE_SPRITE_FILE)
@@ -57,6 +69,53 @@ class Circle(Shape):
 
     def update(self):
         super().update()
+        
+        
+
+class Spaceship(arcade.Sprite):
+    def __init__(self):
+        super().__init__(":resources:images/space_shooter/" + SPACESHIP_LIST[random.choice(range(0,3))], SPACESHIP_SCALING)
+
+        self.center_x = window.CENTER_X
+        self.center_y = window.CENTER_Y
+        self.crossed_border = False
+
+    def update(self):
+
+        # Move
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        # Bounce off the edges
+        if self.left < 0:
+            self.left = 0
+        elif self.right > window.WIDTH - 1:
+            self.right = window.WIDTH - 1
+
+        if self.bottom < 0:
+            self.bottom = 0
+        elif self.top > window.WIDTH - 1:
+            self.top = window.WIDTH - 1
+
+        #if self.left < 0 or self.right > window.WIDTH :
+        #    self.change_x *= -1
+
+        #if self.bottom < 0 or self.top > window.WIDTH:
+        #    self.change_y *= -1
+        
+
+        
+        
+class Meteor(arcade.Sprite):
+    def __init__(self):
+        super().__init__(":resources:images/space_shooter/" + random.choice(METEOR_LIST), METEOR_SCALING)
+
+        self.center_x = window.CENTER_X
+        self.center_y = window.CENTER_Y
+        self.crossed_border = False
+
+    def update(self):
+      pass
         
         
 

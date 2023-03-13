@@ -1,7 +1,6 @@
 import arcade
 from arcade import gui
 from levels import sprites
-from levels import level_const
 from pause_view import PauseView
 
 import window
@@ -13,18 +12,12 @@ class LevelOne(arcade.View):
         super().__init__()
 
         #init all elements
-        self.ai_sprite = sprites.Square()
-        self.background = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg")
-        x_factor = self.background.width / window.WIDTH
-        y_factor = self.background.height / window.HEIGHT
-        self.background_inner = arcade.load_texture(":resources:images/backgrounds/abstract_1.jpg", 
-                                                    level_const.DZ_LEFT * x_factor, level_const.DZ_BOTTOM * y_factor, level_const.DZ_WIDTH * x_factor, level_const.DZ_HEIGHT * y_factor)
+        self.square = sprites.Square()
+                          
         #init gui elements
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-
-
-        
+     
          # Create a vertical BoxGroup to align buttons
         self.h_box = arcade.gui.UIBoxLayout(vertical=False)
 
@@ -51,27 +44,26 @@ class LevelOne(arcade.View):
 
 
         # Variables that will hold sprite lists
-        self.all_sprites_list = None
-        self.bullet_sprites_list = None
+        self.all_sprites_list = arcade.SpriteList()
+        self.circle_sprites_list = arcade.SpriteList()
+        self.all_sprites_list.append(self.square)
 
         # Set up the player info
         self.seconds_survived = 0.0
 
     def on_show_view(self):
-        arcade.set_background_color(arcade.color.BLACK)
+        arcade.set_background_color(arcade.color.GRAY_BLUE)
         
     def on_draw(self):
         self.clear()
         
         #draw background
-        arcade.draw_lrwh_rectangle_textured(0, 0, window.WIDTH, window.HEIGHT, self.background, alpha=100)
-        arcade.draw_rectangle_outline(window.CENTER_X, window.CENTER_Y, level_const.DZ_WIDTH + 2, level_const.DZ_HEIGHT + 2,
-                              arcade.color.BLACK)
-        arcade.draw_lrwh_rectangle_textured(level_const.DZ_LEFT, level_const.DZ_BOTTOM, level_const.DZ_WIDTH, level_const.DZ_HEIGHT, self.background_inner)
-        #arcade.draw_rectangle_filled(const.WIN_CENTER_X, const.WIN_CENTER_Y, const.DZ_WIDTH, const.DZ_HEIGHT , [255,255,255,50])
+        #arcade.draw_rectangle_outline(window.CENTER_X, window.CENTER_Y, level_const.DZ_WIDTH + 2, level_const.DZ_HEIGHT + 2,
+        #                      arcade.color.ORANGE_RED)
+        #arcade.draw_rectangle_filled(window.CENTER_X, window.CENTER_Y, level_const.DZ_WIDTH, level_const.DZ_HEIGHT, arcade.color.AMAZON)
         
         # Draw all the sprites.
-        self.ai_sprite.draw()
+        self.all_sprites_list.draw()
 
         # Draw ui on top of everything
         self.manager.draw()
@@ -84,7 +76,7 @@ class LevelOne(arcade.View):
 
     def on_update(self, delta_time):
         # Call update on all sprites
-        self.ai_sprite.update()
+        self.all_sprites_list.update()
         
 
     def on_key_press(self, key, _modifiers):

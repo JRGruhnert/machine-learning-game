@@ -1,7 +1,7 @@
 import arcade
 import window
 
-from levels import level
+from levels import level, space_evade
 
 
 class HomeView(arcade.View):
@@ -16,5 +16,6 @@ class HomeView(arcade.View):
                          arcade.color.GRAY, font_size=20, anchor_x="center")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
-        game = level.LevelOne()
+        #game = level.LevelOne()
+        game = space_evade.SpaceEvade()
         self.window.show_view(game)
